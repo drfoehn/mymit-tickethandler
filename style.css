@@ -1,0 +1,308 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #eef;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.upload-section, .filter-section, .table-section {
+    margin-bottom: 30px;
+}
+
+input[type="file"] {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: center;
+}
+
+.filters input, .filters select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#clear-filters {
+    background-color: #6c757d;
+}
+
+#clear-filters:hover {
+    background-color: #5a6268;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+td select {
+    width: 100%;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin: 0 3px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.icon-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.icon-btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* Specific colors for SVG paths can be added here if needed */
+/* .delete-btn svg path {
+    fill: #dc3545;
+}
+
+.edit-btn svg path {
+    fill: #ffc107;
+}
+
+.show-btn svg path {
+    fill: #17a2b8;
+} */
+
+/* .delete-btn {
+    background-color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.edit-btn {
+    background-color: #ffc107;
+    margin-right: 5px;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+} */
+
+.description-cell {
+    position: relative;
+    cursor: help;
+}
+
+.description-cell > span {
+    display: block;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.description-cell:hover::after {
+    content: attr(data-full-description);
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    z-index: 1001;
+    background-color: #3f51b5;
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: pre-wrap;
+    width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    pointer-events: none;
+    text-align: left;
+    margin-bottom: 5px; /* space between cell and tooltip */
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+#edit-form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#edit-form input,
+#edit-form select,
+#edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#edit-form textarea {
+    resize: vertical;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.modal-actions button {
+    margin-left: 10px;
+}
+
+#cancel-edit {
+    background-color: #6c757d;
+}
+
+#cancel-edit:hover {
+    background-color: #5a6268;
+}
+
+.column-hidden {
+    display: none;
+}
+
+.view-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.column-toggle label {
+    margin-right: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+th.sortable {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+th.sortable::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    margin-top: -8px;
+    border: 5px solid transparent;
+    opacity: 0.3;
+    border-top-color: white; /* Default arrow pointing up */
+    border-bottom-color: white; /* Default arrow pointing down */
+}
+
+th.sortable.sort-asc::after {
+    opacity: 1;
+    border-bottom-color: white;
+    border-top-width: 0;
+}
+
+th.sortable.sort-desc::after {
+    opacity: 1;
+    border-top-color: white;
+    border-bottom-width: 0;
+} 

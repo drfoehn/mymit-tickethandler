@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMIT Ticket Handler</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>MyMIT Ticket Handler</h1>
+        
+        <div class="upload-section">
+            <h2>PDF-Datei hochladen</h2>
+            <input type="file" id="pdf-upload" accept=".pdf">
+        </div>
+
+        <div class="filter-section">
+            <h2>Tickets filtern</h2>
+            <div class="filters">
+                <input type="text" id="filter-ticket-nr" placeholder="Ticket-Nummer">
+                <input type="text" id="filter-ersteller" placeholder="Ticketersteller/in">
+                <input type="text" id="filter-kostenstelle" placeholder="Kostenstelle">
+            </div>
+            <div class="filters">
+                <select id="filter-status">
+                    <option value="">Status (Alle)</option>
+                    <option value="offen">Offen</option>
+                    <option value="in Arbeit">In Arbeit</option>
+                    <option value="geschlossen">Geschlossen</option>
+                </select>
+                <select id="filter-type">
+                    <option value="">Typ (Alle)</option>
+                    <option value="Serviceanfrage">Serviceanfrage</option>
+                    <option value="Störungsmeldung">Störungsmeldung</option>
+                </select>
+                <input type="date" id="filter-date-start" title="Start-Datum">
+                <input type="date" id="filter-date-end" title="End-Datum">
+                <button id="clear-filters">Filter zurücksetzen</button>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <h2>Tickets</h2>
+
+            <div class="view-options">
+                <div class="column-toggle">
+                    <strong>Spalten ein-/ausblenden:</strong>
+                    <label><input type="checkbox" class="toggle-vis" data-column="kostenstelle"> Kostenstelle</label>
+                    <label><input type="checkbox" class="toggle-vis" data-column="beschreibung"> Beschreibung</label>
+                    <label><input type="checkbox" class="toggle-vis" data-column="equipment"> Equipment</label>
+                    <label><input type="checkbox" class="toggle-vis" data-column="raum"> Raumnummer</label>
+                </div>
+                <button id="download-json">JSON Herunterladen</button>
+            </div>
+
+            <table id="tickets-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="ticketNummer">Ticket-Nr.</th>
+                        <th class="sortable" data-sort="type">Typ</th>
+                        <th class="sortable" data-sort="datum">Datum</th>
+                        <th class="sortable" data-sort="erstelltVon">Ticketersteller/in</th>
+                        <th data-column="kostenstelle">Kostenstelle</th>
+                        <th>Betreff</th>
+                        <th data-column="beschreibung">Beschreibung</th>
+                        <th data-column="equipment">Equipmentnummer</th>
+                        <th data-column="raum">Raumnummer</th>
+                        <th class="sortable" data-sort="status">Status</th>
+                        <th>Aktion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ticket rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Edit Ticket Modal -->
+    <div id="edit-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Ticket bearbeiten</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-ticket-index">
+                
+                <label for="edit-ticket-nr">Ticket-Nummer</label>
+                <input type="text" id="edit-ticket-nr" required>
+                
+                <label for="edit-type">Typ</label>
+                <select id="edit-type">
+                    <option value="Serviceanfrage">Serviceanfrage</option>
+                    <option value="Störungsmeldung">Störungsmeldung</option>
+                </select>
+
+                <label for="edit-date">Datum</label>
+                <input type="date" id="edit-date" required>
+
+                <label for="edit-ersteller">Ticketersteller/in</label>
+                <input type="text" id="edit-ersteller">
+
+                <label for="edit-kostenstelle">Kostenstelle</label>
+                <input type="text" id="edit-kostenstelle">
+
+                <label for="edit-betreff">Betreff</label>
+                <input type="text" id="edit-betreff">
+
+                <label for="edit-beschreibung">Beschreibung</label>
+                <textarea id="edit-beschreibung" rows="5"></textarea>
+
+                <label for="edit-equipment">Equipmentnummer</label>
+                <input type="text" id="edit-equipment">
+
+                <label for="edit-raum">Raumnummer</label>
+                <input type="text" id="edit-raum">
+
+                <div class="modal-actions">
+                    <button type="submit">Speichern</button>
+                    <button type="button" id="cancel-edit">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Show Ticket Modal -->
+    <div id="show-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Ticket Details</h2>
+            <div id="show-modal-content">
+                <!-- Content will be injected by JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-show">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script>
+        // Set the workerSrc for pdf.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    </script>
+    <script src="app.js"></script>
+</body>
+</html> 
