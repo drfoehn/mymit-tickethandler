@@ -21,8 +21,6 @@
                 <input type="text" id="filter-ticket-nr" placeholder="Ticket-Nummer">
                 <input type="text" id="filter-ersteller" placeholder="Ticketersteller/in">
                 <input type="text" id="filter-kostenstelle" placeholder="Kostenstelle">
-            </div>
-            <div class="filters">
                 <select id="filter-status">
                     <option value="">Status (Alle)</option>
                     <option value="offen">Offen</option>
@@ -34,8 +32,14 @@
                     <option value="Serviceanfrage">Serviceanfrage</option>
                     <option value="Störungsmeldung">Störungsmeldung</option>
                 </select>
-                <input type="date" id="filter-date-start" title="Start-Datum">
-                <input type="date" id="filter-date-end" title="End-Datum">
+                <div class="date-filter-group">
+                    <label for="filter-date-start">Von:</label>
+                    <input type="date" id="filter-date-start" title="Start-Datum">
+                </div>
+                <div class="date-filter-group">
+                    <label for="filter-date-end">Bis:</label>
+                    <input type="date" id="filter-date-end" title="End-Datum">
+                </div>
                 <button id="clear-filters">Filter zurücksetzen</button>
             </div>
         </div>

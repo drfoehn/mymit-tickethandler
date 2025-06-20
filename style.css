@@ -37,17 +37,35 @@ input[type="file"] {
 
 .filters {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 15px;
     align-items: center;
 }
 
-.filters input, .filters select {
-    width: 100%;
-    padding: 8px;
+.filters input, .filters select, .filters button {
+    height: 38px; /* Consistent height */
+}
+
+.date-filter-group {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
+    padding-left: 8px;
+}
+
+.date-filter-group label {
+    font-size: 14px;
+    white-space: nowrap;
+    color: #555;
+}
+
+.date-filter-group input[type="date"] {
+    border: none;
+    flex-grow: 1;
+    padding: 7px;
+    height: auto;
 }
 
 button {
