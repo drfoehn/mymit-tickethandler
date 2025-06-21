@@ -54,6 +54,7 @@
                     <label><input type="checkbox" class="toggle-vis" data-column="beschreibung"> Beschreibung</label>
                     <label><input type="checkbox" class="toggle-vis" data-column="equipment"> Equipment</label>
                     <label><input type="checkbox" class="toggle-vis" data-column="raum"> Raumnummer</label>
+                    <label><input type="checkbox" class="toggle-vis" data-column="kommentar"> Kommentar</label>
                 </div>
                 <button id="download-json">JSON Herunterladen</button>
             </div>
@@ -61,6 +62,7 @@
             <table id="tickets-table">
                 <thead>
                     <tr>
+                        <th class="star-header"></th>
                         <th class="sortable" data-sort="ticketNummer">Ticket-Nr.</th>
                         <th class="sortable" data-sort="type">Typ</th>
                         <th class="sortable" data-sort="datum">Datum</th>
@@ -68,8 +70,9 @@
                         <th data-column="kostenstelle">Kostenstelle</th>
                         <th>Betreff</th>
                         <th data-column="beschreibung">Beschreibung</th>
-                        <th data-column="equipment">Equipmentnummer</th>
-                        <th data-column="raum">Raumnummer</th>
+                        <th class="col-equipment" data-column="equipment">Equipment</th>
+                        <th class="col-raum" data-column="raum">Raum</th>
+                        <th class="col-kommentar" data-column="kommentar">Kommentar</th>
                         <th class="sortable" data-sort="status">Status</th>
                         <th>Aktion</th>
                     </tr>
@@ -115,11 +118,14 @@
                 <label for="edit-equipment">Equipmentnummer</label>
                 <input type="text" id="edit-equipment">
 
-                <label for="edit-raum">Raumnummer</label>
-                <input type="text" id="edit-raum">
+                <label for="edit-raum">Raumnummer:</label>
+                <input type="text" id="edit-raum" required>
+
+                <label for="edit-kommentar">Kommentar:</label>
+                <textarea id="edit-kommentar" rows="4"></textarea>
 
                 <div class="modal-actions">
-                    <button type="submit">Speichern</button>
+                    <button type="submit">Änderungen speichern</button>
                     <button type="button" id="cancel-edit">Abbrechen</button>
                 </div>
             </form>

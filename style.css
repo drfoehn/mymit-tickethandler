@@ -323,4 +323,30 @@ th.sortable.sort-desc::after {
     opacity: 1;
     border-top-color: white;
     border-bottom-width: 0;
+}
+
+.star-header {
+    width: 40px;
+}
+
+.col-kommentar.editing textarea {
+    width: 95%;
+    height: 60px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.col-kommentar.editing .inline-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.col-kommentar.editing .inline-actions button {
+    padding: 2px 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 } 

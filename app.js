@@ -52,6 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const storedTickets = localStorage.getItem('tickets');
         if (storedTickets) {
             tickets = JSON.parse(storedTickets);
+            // Backward compatibility for tickets saved without isStarred
+            tickets.forEach(t => {
+                if(t.isStarred === undefined) t.isStarred = false;
+                if(t.kommentar === undefined) t.kommentar = ''; // Add comment field
+            });
         }
 
         const storedVisibility = localStorage.getItem('columnVisibility');
@@ -59,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
             kostenstelle: false,
             beschreibung: false,
             equipment: false,
-            raum: false
+            raum: false,
+            kommentar: false // Default for comment
         };
         applyColumnVisibility();
     };
@@ -92,8 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortedTickets.forEach((ticket) => {
             const originalIndex = tickets.findIndex(t => t.ticketNummer === ticket.ticketNummer);
+            const starIcon = ticket.isStarred ? 'images/black-star-icon.svg' : 'images/star-empty-icon.svg';
+
             const row = tableBody.insertRow();
             row.innerHTML = `
+                <td>
+                    <button class="icon-btn star-btn" data-index="${originalIndex}" title="Favorit">
+                        <img src="${starIcon}" alt="Star">
+                    </button>
+                </td>
                 <td>${ticket.ticketNummer}</td>
                 <td>${ticket.type}</td>
                 <td>${ticket.datum}</td>
@@ -105,6 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td class="col-equipment">${ticket.equipment}</td>
                 <td class="col-raum">${ticket.raum}</td>
+                <td class="description-cell col-kommentar" data-full-description="${ticket.kommentar.replace(/"/g, '&quot;')}">
+                    <span>${ticket.kommentar}</span>
+                </td>
                 <td>
                     <select data-index="${originalIndex}" class="status-select">
                         <option value="offen" ${ticket.status === 'offen' ? 'selected' : ''}>Offen</option>
@@ -241,7 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
             beschreibung: beschreibung,
             equipment: extract(/Equipmentnummer:\s*([\s\S]*?)(?=\s*Betroffene Raumnummer)/i),
             raum: extract(/Raumnummer:\s*([\s\S]*?)(?=\s*Sie können Ihr Ticket)/i),
-            status: 'offen'
+            status: 'offen',
+            isStarred: false, // Default value for new tickets
+            kommentar: '' // Default value for new tickets
         };
         
         for(const key in ticket) {
@@ -264,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('edit-beschreibung').value = ticket.beschreibung;
         document.getElementById('edit-equipment').value = ticket.equipment;
         document.getElementById('edit-raum').value = ticket.raum;
+        document.getElementById('edit-kommentar').value = ticket.kommentar;
         editModal.style.display = 'flex';
     };
 
@@ -283,6 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>Equipmentnummer:</strong> ${ticket.equipment}</p>
             <p><strong>Raumnummer:</strong> ${ticket.raum}</p>
             <p><strong>Status:</strong> ${ticket.status}</p>
+            <p><strong>Kommentar:</strong></p>
+            <pre style="white-space: pre-wrap; word-wrap: break-word;">${ticket.kommentar}</pre>
             <p><strong>Beschreibung:</strong></p>
             <pre style="white-space: pre-wrap; word-wrap: break-word;">${ticket.beschreibung}</pre>
         `;
@@ -294,22 +315,63 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     tableBody.addEventListener('click', (event) => {
-        const target = event.target.closest('.icon-btn');
-        if (!target) return;
-
-        const index = target.dataset.index;
-        if (index === undefined) return;
-
-        if (target.classList.contains('show-btn')) {
-            openShowModal(index);
-        } else if (target.classList.contains('edit-btn')) {
-            openEditModal(index);
-        } else if (target.classList.contains('delete-btn')) {
-            if (confirm('Sind Sie sicher, dass Sie dieses Ticket löschen möchten?')) {
-                tickets.splice(index, 1);
+        const target = event.target;
+    
+        // Handle icon button clicks (Show, Edit, Delete, Star)
+        const iconBtn = target.closest('.icon-btn');
+        if (iconBtn) {
+            const index = iconBtn.dataset.index;
+            if (index === undefined) return;
+    
+            if (iconBtn.classList.contains('star-btn')) {
+                tickets[index].isStarred = !tickets[index].isStarred;
                 saveTickets();
                 applyFilters();
+            } else if (iconBtn.classList.contains('show-btn')) {
+                openShowModal(index);
+            } else if (iconBtn.classList.contains('edit-btn')) {
+                openEditModal(index);
+            } else if (iconBtn.classList.contains('delete-btn')) {
+                if (confirm('Sind Sie sicher, dass Sie dieses Ticket löschen möchten?')) {
+                    tickets.splice(index, 1);
+                    saveTickets();
+                    applyFilters();
+                }
             }
+            return; // Stop further processing
+        }
+    
+        // Handle inline editing for comment cell
+        const commentCell = target.closest('td.col-kommentar');
+        if (commentCell && !commentCell.classList.contains('editing')) {
+            const row = commentCell.closest('tr');
+            const starButton = row.querySelector('.star-btn');
+            if (!starButton) return;
+            
+            const index = parseInt(starButton.dataset.index, 10);
+            const originalComment = tickets[index].kommentar || '';
+    
+            commentCell.classList.add('editing');
+            commentCell.innerHTML = `
+                <textarea>${originalComment}</textarea>
+                <div class="inline-actions">
+                    <button class="inline-save-btn">Speichern</button>
+                    <button class="inline-cancel-btn">Abbrechen</button>
+                </div>
+            `;
+    
+            const textarea = commentCell.querySelector('textarea');
+            textarea.focus();
+    
+            commentCell.querySelector('.inline-save-btn').addEventListener('click', () => {
+                tickets[index].kommentar = textarea.value;
+                saveTickets();
+                applyFilters();
+            });
+    
+            commentCell.querySelector('.inline-cancel-btn').addEventListener('click', () => {
+                applyFilters(); // Re-render to discard changes
+            });
         }
     });
 
@@ -336,7 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
             betreff: document.getElementById('edit-betreff').value,
             beschreibung: document.getElementById('edit-beschreibung').value,
             equipment: document.getElementById('edit-equipment').value,
-            raum: document.getElementById('edit-raum').value
+            raum: document.getElementById('edit-raum').value,
+            kommentar: document.getElementById('edit-kommentar').value
         };
 
         tickets[index] = updatedTicket;
